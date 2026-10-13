@@ -21,25 +21,25 @@
     "name": "SecurityWeek",
     "url": "https://www.securityweek.com/feed/",
     "type": "rss",
-    "tags": ["CYBER"]
+    "tags": ["CYBER", "BUSINESS"]
   },
   {
     "name": "Dark Reading",
     "url": "https://www.darkreading.com/rss.xml",
     "type": "rss",
-    "tags": ["CYBER"]
+    "tags": ["CYBER", "BUSINESS"]
   },
   {
     "name": "The Record",
     "url": "https://therecord.media/feed",
     "type": "rss",
-    "tags": ["CYBER"]
+    "tags": ["CYBER", "BUSINESS"]
   },
   {
     "name": "CyberScoop",
     "url": "https://cyberscoop.com/feed/",
     "type": "rss",
-    "tags": ["CYBER"]
+    "tags": ["CYBER", "BUSINESS"]
   },
   {
     "name": "Help Net Security",
@@ -105,25 +105,25 @@
     "name": "Hacker News",
     "url": "https://hnrss.org/frontpage",
     "type": "rss",
-    "tags": ["NEWS", "IA", "CYBER", "OS", "HARDWARE"]
+    "tags": ["NEWS", "IA", "CYBER", "OS", "HARDWARE", "DEVICES", "BUSINESS"]
   },
   {
     "name": "The Verge",
     "url": "https://www.theverge.com/rss/index.xml",
     "type": "rss",
-    "tags": ["NEWS", "IA", "OS", "HARDWARE"]
+    "tags": ["NEWS", "IA", "OS", "HARDWARE", "DEVICES", "BUSINESS"]
   },
   {
     "name": "TechCrunch",
     "url": "https://techcrunch.com/feed/",
     "type": "rss",
-    "tags": ["NEWS", "IA"]
+    "tags": ["NEWS", "IA", "DEVICES", "BUSINESS"]
   },
   {
     "name": "Ars Technica",
     "url": "https://feeds.arstechnica.com/arstechnica/index",
     "type": "rss",
-    "tags": ["NEWS", "CYBER", "OS", "HARDWARE"]
+    "tags": ["NEWS", "CYBER", "OS", "HARDWARE", "IA", "DEVICES", "BUSINESS"]
   },
   {
     "name": "Wired Security",
@@ -135,55 +135,55 @@
     "name": "The Register Security",
     "url": "https://www.theregister.com/security/headlines.atom",
     "type": "rss",
-    "tags": ["CYBER", "NEWS"]
+    "tags": ["CYBER", "NEWS", "BUSINESS"]
   },
   {
     "name": "The Register Software",
     "url": "https://www.theregister.com/software/headlines.atom",
     "type": "rss",
-    "tags": ["NEWS", "OS"]
+    "tags": ["NEWS", "OS", "BUSINESS"]
   },
   {
     "name": "Engadget",
     "url": "https://www.engadget.com/rss.xml",
     "type": "rss",
-    "tags": ["NEWS", "HARDWARE", "IA"]
+    "tags": ["NEWS", "HARDWARE", "IA", "DEVICES", "BUSINESS"]
   },
   {
     "name": "Slashdot",
     "url": "https://rss.slashdot.org/Slashdot/slashdotMain",
     "type": "rss",
-    "tags": ["NEWS", "OS", "HARDWARE"]
+    "tags": ["NEWS", "OS", "HARDWARE", "IA", "CYBER", "DEVICES", "BUSINESS"]
   },
   {
     "name": "InfoQ",
     "url": "https://feed.infoq.com/",
     "type": "rss",
-    "tags": ["NEWS", "IA"]
+    "tags": ["NEWS", "IA", "BUSINESS"]
   },
   {
     "name": "Cloudflare Blog",
     "url": "https://blog.cloudflare.com/rss/",
     "type": "rss",
-    "tags": ["CYBER", "NEWS"]
+    "tags": ["CYBER", "NEWS", "BUSINESS"]
   },
   {
     "name": "AWS News",
     "url": "https://aws.amazon.com/blogs/aws/feed/",
     "type": "rss",
-    "tags": ["NEWS", "IA"]
+    "tags": ["NEWS", "IA", "BUSINESS"]
   },
   {
     "name": "GitHub Blog",
     "url": "https://github.blog/feed/",
     "type": "rss",
-    "tags": ["NEWS", "CYBER", "IA"]
+    "tags": ["NEWS", "CYBER", "IA", "BUSINESS"]
   },
   {
     "name": "OpenAI News",
     "url": "https://openai.com/news/rss.xml",
     "type": "rss",
-    "tags": ["IA"]
+    "tags": ["IA", "BUSINESS"]
   },
   {
     "name": "Google DeepMind",
@@ -195,7 +195,7 @@
     "name": "Google AI",
     "url": "https://blog.google/technology/ai/rss/",
     "type": "rss",
-    "tags": ["IA"]
+    "tags": ["IA", "BUSINESS"]
   },
   {
     "name": "Hugging Face",
@@ -225,13 +225,13 @@
     "name": "TechCrunch AI",
     "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
     "type": "rss",
-    "tags": ["IA"]
+    "tags": ["IA", "BUSINESS"]
   },
   {
     "name": "The Verge AI",
     "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
     "type": "rss",
-    "tags": ["IA"]
+    "tags": ["IA", "BUSINESS"]
   },
   {
     "name": "NVIDIA Developer Blog",
@@ -279,7 +279,7 @@
     "name": "Windows Blogs",
     "url": "https://blogs.windows.com/feed/",
     "type": "rss",
-    "tags": ["OS", "NEWS"]
+    "tags": ["OS", "NEWS", "DEVICES"]
   },
   {
     "name": "Microsoft DevBlogs",
@@ -291,48 +291,72 @@
     "name": "Tom's Hardware",
     "url": "https://www.tomshardware.com/feeds/all",
     "type": "rss",
-    "tags": ["HARDWARE"]
+    "tags": ["HARDWARE", "DEVICES", "BUSINESS"]
   },
   {
     "name": "TechPowerUp",
     "url": "https://www.techpowerup.com/rss/news",
     "type": "rss",
-    "tags": ["HARDWARE"]
+    "tags": ["HARDWARE", "DEVICES", "BUSINESS"]
   },
   {
     "name": "ServeTheHome",
     "url": "https://www.servethehome.com/feed/",
     "type": "rss",
-    "tags": ["HARDWARE", "NEWS"]
+    "tags": ["HARDWARE", "NEWS", "BUSINESS"]
   },
   {
     "name": "Raspberry Pi",
     "url": "https://www.raspberrypi.com/news/feed/",
     "type": "rss",
-    "tags": ["HARDWARE", "OS"]
+    "tags": ["HARDWARE", "OS", "DEVICES"]
   },
   {
     "name": "Hackaday",
     "url": "https://hackaday.com/blog/feed/",
     "type": "rss",
-    "tags": ["HARDWARE", "NEWS"]
+    "tags": ["HARDWARE", "NEWS", "DEVICES"]
   },
   {
     "name": "CNX Software",
     "url": "https://www.cnx-software.com/feed/",
     "type": "rss",
-    "tags": ["HARDWARE", "OS"]
+    "tags": ["HARDWARE", "OS", "DEVICES"]
   },
   {
     "name": "9to5Mac",
     "url": "https://9to5mac.com/feed/",
     "type": "rss",
-    "tags": ["OS", "HARDWARE"]
+    "tags": ["OS", "HARDWARE", "DEVICES", "BUSINESS"]
   },
   {
     "name": "Android Developers",
     "url": "https://android-developers.googleblog.com/feeds/posts/default",
     "type": "rss",
-    "tags": ["OS", "NEWS"]
+    "tags": ["OS", "NEWS", "DEVICES"]
+  },
+  {
+    "name": "9to5Google",
+    "url": "https://9to5google.com/feed/",
+    "type": "rss",
+    "tags": ["DEVICES", "OS", "IA", "NEWS", "BUSINESS"]
+  },
+  {
+    "name": "MacRumors",
+    "url": "https://www.macrumors.com/macrumors.xml",
+    "type": "rss",
+    "tags": ["DEVICES", "OS", "HARDWARE", "BUSINESS"]
+  },
+  {
+    "name": "Android Authority",
+    "url": "https://www.androidauthority.com/feed/",
+    "type": "rss",
+    "tags": ["DEVICES", "OS", "HARDWARE", "NEWS"]
+  },
+  {
+    "name": "SiliconANGLE",
+    "url": "https://siliconangle.com/feed/",
+    "type": "rss",
+    "tags": ["BUSINESS", "NEWS", "IA", "CYBER"]
   }
 ]

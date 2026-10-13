@@ -1,9 +1,6 @@
 const STOP_WORDS = new Set([
   'the',
-  'a',
-  'an',
   'and',
-  'or',
   'for',
   'with',
   'from',
@@ -11,52 +8,107 @@ const STOP_WORDS = new Set([
   'after',
   'before',
   'about',
+  'this',
+  'that',
+  'has',
+  'have',
+  'will',
+  'are',
+  'was',
+  'were',
   'new',
   'latest',
+  'more',
+  'than',
   'how',
   'why',
   'what',
-  'this',
-  'that',
-  'are',
-  'has',
-  'have',
-  'its',
-  'dans',
-  'avec',
-  'pour',
-  'une',
-  'des',
-  'les',
-  'sur',
-  'est',
+  'can',
+  'says',
+  'said',
+  'report',
+  'reports',
+  'reportedly',
+  'reveals',
+  'revealed',
+  'announces',
+  'announced',
+  'launches',
+  'launched',
+  'updates',
+  'updated',
 ]);
 
-function tokenize(title: string): Set<string> {
+const GENERIC_TERMS = new Set([
+  'security',
+  'software',
+  'technology',
+  'tech',
+  'company',
+  'companies',
+  'users',
+  'system',
+  'systems',
+  'attack',
+  'attacks',
+  'hackers',
+  'vulnerability',
+  'vulnerabilities',
+  'flaw',
+  'flaws',
+  'update',
+  'release',
+  'feature',
+  'features',
+  'model',
+  'models',
+  'data',
+  'artificial',
+  'intelligence',
+]);
+
+export function tokenizeTitle(title: string): Set<string> {
+  const normalized = title
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, '');
+
   return new Set(
-    title
-      .normalize('NFKD')
-      .toLowerCase()
-      .replace(/[\u0300-\u036f]/g, '')
-      .split(/[^a-z0-9]+/)
-      .filter((word) => word.length >= 3 && !STOP_WORDS.has(word)),
+    (normalized.match(/[a-z0-9]+/g) ?? [])
+      .filter((word) => word.length >= 3)
+      .filter((word) => !STOP_WORDS.has(word)),
   );
 }
 
 export function titleSimilarity(first: string, second: string): number {
-  const a = tokenize(first);
-  const b = tokenize(second);
+  const a = tokenizeTitle(first);
+  const b = tokenizeTitle(second);
 
   if (a.size === 0 || b.size === 0) {
     return 0;
   }
 
-  const intersection = [...a].filter((word) => b.has(word)).length;
-  const union = new Set([...a, ...b]).size;
+  const common = [...a].filter((word) => b.has(word));
+  const unionSize = new Set([...a, ...b]).size;
 
-  return intersection / union;
+  return common.length / unionSize;
 }
 
-export function isSimilarTitle(first: string, second: string): boolean {
-  return titleSimilarity(first, second) >= 0.65;
+export function isSameEvent(first: string, second: string): boolean {
+  const a = tokenizeTitle(first);
+  const b = tokenizeTitle(second);
+
+  const common = [...a].filter((word) => b.has(word));
+
+  if (common.length < 2) {
+    return false;
+  }
+
+  const distinctiveMatches = common.filter((word) => !GENERIC_TERMS.has(word));
+
+  const overlap = common.length / Math.min(a.size, b.size);
+
+  return (
+    titleSimilarity(first, second) >= 0.6 || (distinctiveMatches.length >= 2 && overlap >= 0.6)
+  );
 }

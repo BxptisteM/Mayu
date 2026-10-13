@@ -27,6 +27,8 @@ const envSchema = z.object({
   DISCORD_CHANNEL_NEWS: discordIdSchema,
   DISCORD_CHANNEL_GITHUB: discordIdSchema,
   DISCORD_CHANNEL_PODCASTS: discordIdSchema,
+  DISCORD_CHANNEL_DEVICES: discordIdSchema,
+  DISCORD_CHANNEL_BUSINESS: discordIdSchema,
 
   ARTICLES_LOOKBACK_HOURS: z.coerce.number().int().positive().default(24),
   ARTICLES_MAX_PER_CATEGORY: z.coerce.number().int().positive().default(20),

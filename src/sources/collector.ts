@@ -4,11 +4,11 @@ import { env } from '../config/env.js';
 import { db } from '../database/client.js';
 import { articleCategories, articles, sources } from '../database/schema/index.js';
 import { logger } from '../shared/logger.js';
-
 import type { Category } from './categories.js';
 import { mapConcurrent } from './concurrency.js';
 import { isEditorialArticle, rankCandidates } from './editorial-filter.js';
 import { fetchRssArticles, type CollectedArticle } from './rss.provider.js';
+import { classifyArticle, isTechnologyArticle } from '../editorial/classifier.js';
 
 interface Candidate extends CollectedArticle {
   sourceId: string;
@@ -103,12 +103,27 @@ export async function collectArticles(
         result.articlesFetched += fetched.length;
 
         const recent = rankCandidates(
-          fetched.filter(
-            (article) =>
-              article.publishedAt >= cutoff &&
-              article.publishedAt <= now &&
-              isEditorialArticle(article),
-          ),
+          fetched.filter((article) => {
+            if (
+              article.publishedAt < cutoff ||
+              article.publishedAt > now ||
+              !isEditorialArticle(article)
+            ) {
+              return false;
+            }
+
+            const articleCategory = classifyArticle(article);
+
+            if (category === 'GITHUB') {
+              return false;
+            }
+
+            if (category === 'NEWS') {
+              return articleCategory === null && isTechnologyArticle(article);
+            }
+
+            return articleCategory === category;
+          }),
         ).slice(0, env.ARTICLES_MAX_PER_SOURCE);
 
         logger.debug(

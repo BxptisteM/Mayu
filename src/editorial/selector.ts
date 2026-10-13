@@ -5,8 +5,9 @@ import { articleCategories, articles, publications, sources } from '../database/
 import type { Category } from '../sources/categories.js';
 
 import { calculateRelevance, isPromotionalContent } from './relevance.js';
-import { isSimilarTitle } from './similarity.js';
 import type { EditorialCandidate, RankedArticle } from './types.js';
+import { groupEvents } from './events.js';
+import { isSameEvent } from './similarity.js';
 
 export async function selectArticles(
   category: Category,
@@ -64,23 +65,43 @@ export async function selectArticles(
         a.id.localeCompare(b.id),
     );
 
+  const recentPublications = await db
+    .select({
+      title: articles.title,
+    })
+    .from(publications)
+    .innerJoin(articles, eq(publications.articleId, articles.id))
+    .where(
+      and(
+        eq(publications.guildId, guildId),
+        gte(publications.publishedAt, new Date(now.getTime() - 72 * 60 * 60 * 1000)),
+      ),
+    );
+
+  const events = groupEvents(ranked);
+
   const selected: RankedArticle[] = [];
   const sourceCounts = new Map<string, number>();
 
-  for (const article of ranked) {
+  for (const event of events) {
     if (selected.length >= limit) {
       break;
+    }
+
+    const article = event.representative;
+
+    const alreadyCovered = recentPublications.some((publication) =>
+      event.articles.some((candidate) => isSameEvent(candidate.title, publication.title)),
+    );
+
+    if (alreadyCovered) {
+      continue;
     }
 
     const sourceKey = article.sourceId ?? article.sourceName;
     const sourceCount = sourceCounts.get(sourceKey) ?? 0;
 
-    // Prefer editorial diversity when enough sources are available.
     if (sourceCount >= 2) {
-      continue;
-    }
-
-    if (selected.some((previous) => isSimilarTitle(previous.title, article.title))) {
       continue;
     }
 

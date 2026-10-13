@@ -24,7 +24,9 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/scripts/seed-sources.ts",
     "collect:test": "tsx src/scripts/collect.ts",
-    "editorial:preview": "tsx src/scripts/preview-selection.ts"
+    "editorial:preview": "tsx src/scripts/preview-selection.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -48,6 +50,7 @@
     "pg": "^8.23.1",
     "pino": "^10.4.0",
     "rss-parser": "^3.13.0",
+    "vitest": "^5.0.4",
     "zod": "^4.6.7"
   },
   "devDependencies": {
