@@ -24,6 +24,7 @@ ENV NODE_ENV=production
 
 RUN npm ci --omit=dev && npm cache clean --force
 
+COPY sources.json ./sources.json
 COPY --from=build /app/dist ./dist
 
 USER node

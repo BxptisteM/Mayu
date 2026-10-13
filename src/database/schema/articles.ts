@@ -1,4 +1,4 @@
-import { index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core';
 
 import { sources } from './sources.js';
 
@@ -25,6 +25,12 @@ export const articles = pgTable(
     })
       .notNull()
       .defaultNow(),
+
+    isPublished: boolean('published').notNull().default(false),
+
+    discordPublishedAt: timestamp('discord_published_at', {
+      withTimezone: true,
+    }),
   },
   (table) => [
     index('articles_source_idx').on(table.sourceId),

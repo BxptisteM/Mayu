@@ -19,6 +19,23 @@ const envSchema = z.object({
   OPENROUTER_MODEL: z.string().default('openrouter/free'),
   OPENROUTER_MONTHLY_BUDGET_USD: z.coerce.number().positive().max(1).default(0.9),
   OPENROUTER_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(2048),
+
+  DISCORD_CHANNEL_CYBER: discordIdSchema,
+  DISCORD_CHANNEL_IA: discordIdSchema,
+  DISCORD_CHANNEL_OS: discordIdSchema,
+  DISCORD_CHANNEL_HARDWARE: discordIdSchema,
+  DISCORD_CHANNEL_NEWS: discordIdSchema,
+  DISCORD_CHANNEL_GITHUB: discordIdSchema,
+  DISCORD_CHANNEL_PODCASTS: discordIdSchema,
+
+  ARTICLES_LOOKBACK_HOURS: z.coerce.number().int().positive().default(24),
+  ARTICLES_MAX_PER_CATEGORY: z.coerce.number().int().positive().default(20),
+  ARTICLES_MAX_PER_SOURCE: z.coerce.number().int().positive().default(5),
+  ARTICLES_DAILY_PUBLISH_LIMIT: z.coerce.number().int().positive().default(5),
+  ARTICLES_MORE_PUBLISH_LIMIT: z.coerce.number().int().positive().default(3),
+
+  SOURCES_FETCH_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
+  SOURCES_MAX_CONCURRENCY: z.coerce.number().int().min(1).max(8).default(4),
 });
 
 const result = envSchema.safeParse(process.env);

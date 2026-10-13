@@ -5,3 +5,4 @@ export * from './publications.js';
 export * from './selections.js';
 export * from './job-runs.js';
 export * from './ai-usages.js';
+export * from './article-categories.js';

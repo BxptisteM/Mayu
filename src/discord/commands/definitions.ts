@@ -7,8 +7,9 @@ const commandDefinitions = [
   ['hardware', 'Run the hardware news job'],
   ['news', 'Run the general technology news job'],
   ['github', 'Run the GitHub trending job'],
-  ['resume', 'Generate a Markdown article from selected news'],
+  ['summarize', 'Generate a Markdown article from selected news'],
   ['budget', 'Show the OpenRouter budget'],
+  ['podcast', 'Latest relevant podcasts episodes'],
 ] as const;
 
 export const commands = [
@@ -30,6 +31,30 @@ export const commands = [
         .setRequired(true)
         .addChoices({ name: 'French', value: 'fr' }, { name: 'English', value: 'en' }),
     ),
+
+  new SlashCommandBuilder()
+    .setName('more')
+    .setDescription('Publish three additional unpublished articles')
+    .setContexts(InteractionContextType.Guild)
+    .addStringOption((option) =>
+      option
+        .setName('category')
+        .setDescription('Technology news category')
+        .setRequired(true)
+        .addChoices(
+          { name: 'Cybersecurity', value: 'CYBER' },
+          { name: 'Artificial Intelligence', value: 'IA' },
+          { name: 'Operating Systems', value: 'OS' },
+          { name: 'Hardware', value: 'HARDWARE' },
+          { name: 'Technology', value: 'NEWS' },
+          { name: 'GitHub', value: 'GITHUB' },
+        ),
+    ),
+
+  new SlashCommandBuilder()
+    .setName('podcasts')
+    .setDescription('Fetch and publish recent technology podcast episodes')
+    .setContexts(InteractionContextType.Guild),
 ];
 
 export const commandNames = new Set(commands.map((command) => command.name));
