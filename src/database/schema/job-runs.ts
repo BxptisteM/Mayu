@@ -1,24 +1,8 @@
+import { index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-import {
-  index,
-  integer,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+export const jobStatusEnum = pgEnum('job_status', ['running', 'success', 'failed']);
 
-export const jobStatusEnum = pgEnum('job_status', [
-  'running',
-  'success',
-  'failed',
-]);
-
-export const jobTriggerEnum = pgEnum('job_trigger', [
-  'cron',
-  'manual',
-]);
+export const jobTriggerEnum = pgEnum('job_trigger', ['cron', 'manual']);
 
 export const jobRuns = pgTable(
   'job_runs',
@@ -37,13 +21,13 @@ export const jobRuns = pgTable(
 
     startedAt: timestamp('started_at', {
       withTimezone: true,
-    }).notNull().defaultNow(),
+    })
+      .notNull()
+      .defaultNow(),
 
     finishedAt: timestamp('finished_at', {
       withTimezone: true,
     }),
   },
-  (table) => [
-    index('job_runs_job_started_idx').on(table.job, table.startedAt),
-  ],
+  (table) => [index('job_runs_job_started_idx').on(table.job, table.startedAt)],
 );

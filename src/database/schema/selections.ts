@@ -1,11 +1,4 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { articles } from './articles.js';
 
@@ -23,7 +16,9 @@ export const selections = pgTable(
 
     selectedAt: timestamp('selected_at', {
       withTimezone: true,
-    }).notNull().defaultNow(),
+    })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [
     uniqueIndex('selections_user_article_guild_idx').on(
@@ -31,9 +26,6 @@ export const selections = pgTable(
       table.articleId,
       table.guildId,
     ),
-    index('selections_user_guild_idx').on(
-      table.userId,
-      table.guildId,
-    ),
+    index('selections_user_guild_idx').on(table.userId, table.guildId),
   ],
 );

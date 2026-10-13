@@ -3,13 +3,18 @@ import 'dotenv/config';
 import { connectDiscord, disconnectDiscord } from './discord/client.js';
 import { registerInteractionHandlers } from './discord/interactions.js';
 import { logger } from './shared/logger.js';
+import { connectDatabase } from './database/client.js';
 
 async function bootstrap(): Promise<void> {
   logger.info('Starting Mayu');
 
+  await connectDatabase();
+  logger.info('Database connected');
+
   registerInteractionHandlers();
 
   await connectDiscord();
+  logger.info('Discord connected');
 
   logger.info('Mayu started successfully');
 }

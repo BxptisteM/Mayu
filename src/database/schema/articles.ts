@@ -1,10 +1,4 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { sources } from './sources.js';
 
@@ -13,8 +7,7 @@ export const articles = pgTable(
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    sourceId: uuid('source_id') 
-      .references(() => sources.id, { onDelete: 'set null' }),
+    sourceId: uuid('source_id').references(() => sources.id, { onDelete: 'set null' }),
 
     title: text('title').notNull(),
     url: text('url').notNull().unique(),
@@ -29,7 +22,9 @@ export const articles = pgTable(
 
     fetchedAt: timestamp('fetched_at', {
       withTimezone: true,
-    }).notNull().defaultNow(),
+    })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [
     index('articles_source_idx').on(table.sourceId),

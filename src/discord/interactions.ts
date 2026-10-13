@@ -1,14 +1,14 @@
 import { Events, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
-
 import { env } from '../config/env.js';
 import { logger } from '../shared/logger.js';
 import { discordClient } from './client.js';
 import { commandNames } from './commands/definitions.js';
+import { handleLanguageCommand } from './commands/language.js';
 
 async function handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   if (interaction.guildId !== env.DISCORD_GUILD_ID) {
     await interaction.reply({
-      content: "Vous n'êtes pas autorisé à utiliser cette commande.",
+      content: 'You are not authorized to use this command.',
       flags: MessageFlags.Ephemeral,
     });
 
@@ -17,10 +17,15 @@ async function handleCommand(interaction: ChatInputCommandInteraction): Promise<
 
   if (!commandNames.has(interaction.commandName)) {
     await interaction.reply({
-      content: 'Commande inconnue.',
+      content: 'Unknown command.',
       flags: MessageFlags.Ephemeral,
     });
 
+    return;
+  }
+
+  if (interaction.commandName === 'language') {
+    await handleLanguageCommand(interaction);
     return;
   }
 
@@ -33,7 +38,7 @@ async function handleCommand(interaction: ChatInputCommandInteraction): Promise<
   );
 
   await interaction.reply({
-    content: `La commande /${interaction.commandName} n'est pas encore implémentée.`,
+    content: `The /${interaction.commandName} command has not been implemented yet.`,
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -48,7 +53,7 @@ export function registerInteractionHandlers(): void {
       logger.error({ err: error, command: interaction.commandName }, 'Discord interaction failed');
 
       try {
-        const content = "Une erreur est survenue pendant l'exécution de la commande.";
+        const content = 'An error occurred while executing the command.';
 
         if (interaction.deferred || interaction.replied) {
           await interaction.followUp({

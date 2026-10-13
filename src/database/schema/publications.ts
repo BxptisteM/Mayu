@@ -1,11 +1,4 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { articles } from './articles.js';
 
@@ -26,7 +19,9 @@ export const publications = pgTable(
 
     publishedAt: timestamp('published_at', {
       withTimezone: true,
-    }).notNull().defaultNow(),
+    })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [
     uniqueIndex('publications_article_category_guild_idx').on(

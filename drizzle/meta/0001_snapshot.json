@@ -84,9 +84,7 @@
         "sources_url_unique": {
           "name": "sources_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -232,12 +230,8 @@
           "name": "articles_source_id_sources_id_fk",
           "tableFrom": "articles",
           "tableTo": "sources",
-          "columnsFrom": [
-            "source_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["source_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -247,9 +241,7 @@
         "articles_url_unique": {
           "name": "articles_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -354,12 +346,8 @@
           "name": "publications_article_id_articles_id_fk",
           "tableFrom": "publications",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -369,9 +357,7 @@
         "publications_message_id_unique": {
           "name": "publications_message_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "message_id"
-          ]
+          "columns": ["message_id"]
         }
       },
       "policies": {},
@@ -470,12 +456,8 @@
           "name": "selections_article_id_articles_id_fk",
           "tableFrom": "selections",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -660,27 +642,17 @@
     "public.language": {
       "name": "language",
       "schema": "public",
-      "values": [
-        "fr",
-        "en"
-      ]
+      "values": ["fr", "en"]
     },
     "public.job_status": {
       "name": "job_status",
       "schema": "public",
-      "values": [
-        "running",
-        "success",
-        "failed"
-      ]
+      "values": ["running", "success", "failed"]
     },
     "public.job_trigger": {
       "name": "job_trigger",
       "schema": "public",
-      "values": [
-        "cron",
-        "manual"
-      ]
+      "values": ["cron", "manual"]
     }
   },
   "schemas": {},

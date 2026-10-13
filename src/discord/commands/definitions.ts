@@ -1,51 +1,35 @@
 import { InteractionContextType, SlashCommandBuilder } from 'discord.js';
 
 const commandDefinitions = [
-  {
-    name: 'cyber',
-    description: 'Start the cybersecurity watch',
-  },
-  {
-    name: 'ia',
-    description: 'Start the artificial intelligence watch',
-  },
-  {
-    name: 'os',
-    description: "Start the operating systems watch",
-  },
-  {
-    name: 'hardware',
-    description: 'Start the hardware watch',
-  },
-  {
-    name: 'news',
-    description: 'Start the general technology watch',
-  },
-  {
-    name: 'github',
-    description: 'Start the GitHub repository watch',
-  },
-  {
-    name: 'resume',
-    description: 'Generate a Markdown article from the selected news',
-  },
-  {
-    name: 'budget',
-    description: 'View the OpenRouter budget',
-  },
-  {
-    name: 'language',
-    description: 'Change the language of generated content',
-  },
+  ['cyber', 'Run the cybersecurity news job'],
+  ['ia', 'Run the artificial intelligence news job'],
+  ['os', 'Run the operating systems news job'],
+  ['hardware', 'Run the hardware news job'],
+  ['news', 'Run the general technology news job'],
+  ['github', 'Run the GitHub trending job'],
+  ['resume', 'Generate a Markdown article from selected news'],
+  ['budget', 'Show the OpenRouter budget'],
 ] as const;
 
-export type CommandName = (typeof commandDefinitions)[number]['name'];
+export const commands = [
+  ...commandDefinitions.map(([name, description]) =>
+    new SlashCommandBuilder()
+      .setName(name)
+      .setDescription(description)
+      .setContexts(InteractionContextType.Guild),
+  ),
 
-export const commandNames = new Set<string>(commandDefinitions.map((command) => command.name));
-
-export const commands = commandDefinitions.map((command) =>
   new SlashCommandBuilder()
-    .setName(command.name)
-    .setDescription(command.description)
-    .setContexts(InteractionContextType.Guild),
-);
+    .setName('language')
+    .setDescription('Change the language of generated content')
+    .setContexts(InteractionContextType.Guild)
+    .addStringOption((option) =>
+      option
+        .setName('value')
+        .setDescription('Language for news summaries and Markdown articles')
+        .setRequired(true)
+        .addChoices({ name: 'French', value: 'fr' }, { name: 'English', value: 'en' }),
+    ),
+];
+
+export const commandNames = new Set(commands.map((command) => command.name));

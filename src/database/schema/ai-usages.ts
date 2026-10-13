@@ -1,12 +1,4 @@
-import {
-  index,
-  integer,
-  numeric,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { index, integer, numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const aiUsages = pgTable(
   'ai_usages',
@@ -26,9 +18,9 @@ export const aiUsages = pgTable(
 
     createdAt: timestamp('created_at', {
       withTimezone: true,
-    }).notNull().defaultNow(),
+    })
+      .notNull()
+      .defaultNow(),
   },
-  (table) => [
-    index('ai_usages_created_at_idx').on(table.createdAt),
-  ],
+  (table) => [index('ai_usages_created_at_idx').on(table.createdAt)],
 );

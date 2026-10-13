@@ -84,9 +84,7 @@
         "sources_url_unique": {
           "name": "sources_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -139,10 +137,7 @@
     "public.language": {
       "name": "language",
       "schema": "public",
-      "values": [
-        "fr",
-        "en"
-      ]
+      "values": ["fr", "en"]
     }
   },
   "schemas": {},
