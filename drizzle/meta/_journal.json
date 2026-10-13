@@ -8,6 +8,13 @@
       "when": 1791908282190,
       "tag": "0000_perpetual_stature",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791910637156,
+      "tag": "0001_blushing_flatman",
+      "breakpoints": true
     }
   ]
 }
