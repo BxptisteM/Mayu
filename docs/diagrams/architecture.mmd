@@ -1,0 +1,23 @@
+flowchart LR
+  Feeds[RSS feeds] --> Sources[Sources and collector]
+  GH[GitHub REST API] --> Discovery[Discovery providers]
+  Podcasts[Podcast feeds] --> Discovery
+  Discord[Discord interactions] --> Commands[Slash commands and selection buttons]
+  Cron[node-cron scheduler] --> Jobs[News / discovery / cleanup jobs]
+  Commands --> Jobs
+  Jobs --> Sources
+  Jobs --> Discovery
+  Sources --> Editorial[Classifier, relevance, grouping, selection]
+  Editorial --> Publications[Publication services and intents]
+  Discovery --> Publications
+  Publications --> AI[OpenRouter completion and budget]
+  AI --> OpenRouter[OpenRouter API]
+  Sources --> DB[(PostgreSQL / Drizzle)]
+  Editorial --> DB
+  Jobs --> DB
+  Publications --> DB
+  Publications --> Discord
+  Commands --> Briefing[Personal Markdown briefing]
+  Briefing --> AI
+  Briefing --> DB
+  Briefing --> Discord

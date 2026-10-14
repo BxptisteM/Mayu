@@ -1,0 +1,140 @@
+erDiagram
+    SOURCES |o--o{ ARTICLES : "source_id"
+    ARTICLES ||--o{ ARTICLE_CATEGORIES : "article_id"
+    ARTICLES ||--o{ SELECTIONS : "article_id"
+    ARTICLES ||--o{ PUBLICATIONS : "article_id"
+    GITHUB_REPOSITORIES ||--o{ GITHUB_SNAPSHOTS : "github_id"
+    SOURCES {
+        UUID id PK
+        text name
+        text url
+        text type
+        textArray tags
+        boolean enabled
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    ARTICLES {
+        UUID id PK
+        UUID source_id FK
+        text title
+        text url
+        text description
+        text summary
+        text summary_language
+        timestamptz published_at
+        timestamptz fetched_at
+        boolean published
+        timestamptz discord_published_at
+    }
+    ARTICLE_CATEGORIES {
+        UUID article_id PK, FK
+        text category PK
+        timestamptz created_at
+    }
+    SELECTIONS {
+        UUID id PK
+        UUID article_id FK
+        text user_id
+        text guild_id
+        timestamptz selected_at
+    }
+    PUBLICATIONS {
+        UUID id PK
+        UUID article_id FK
+        text category
+        text guild_id
+        text channel_id
+        text message_id
+        timestamptz published_at
+    }
+    PUBLICATION_INTENTS {
+        UUID id PK
+        text key
+        text kind
+        text guild_id
+        text channel_id
+        text category
+        text item_key
+        enum status
+        text message_id
+        text error
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    DISCOVERY_PUBLICATIONS {
+        UUID id PK
+        text guild_id
+        text category
+        text item_key
+        text channel_id
+        text message_id
+        timestamptz published_at
+    }
+    GITHUB_REPOSITORIES {
+        bigint github_id PK
+        text full_name
+        text url
+        text description
+        text language
+        integer stars
+        integer forks
+        timestamptz created_at
+        timestamptz pushed_at
+        timestamptz updated_at
+    }
+    GITHUB_SNAPSHOTS {
+        UUID id PK
+        bigint github_id FK
+        integer stars
+        timestamptz captured_at
+    }
+    PODCAST_EPISODES {
+        text id PK
+        text podcast_name
+        text guid
+        text title
+        text url
+        text description
+        timestamptz published_at
+        timestamptz fetched_at
+    }
+    GUILD_SETTINGS {
+        text guild_id PK
+        enum language
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    AI_RESERVATIONS {
+        UUID id PK
+        text model
+        text operation
+        enum status
+        numeric reserved_usd
+        numeric actual_usd
+        int input_tokens
+        int output_tokens
+        text error
+        timestamptz created_at
+        timestamptz completed_at
+    }
+    AI_USAGES {
+        UUID id PK
+        text model
+        text operation
+        int input_tokens
+        int output_tokens
+        numeric cost_usd
+        timestamptz created_at
+    }
+    JOB_RUNS {
+        UUID id PK
+        text job
+        enum trigger
+        enum status
+        int articles_fetched
+        int articles_published
+        text error
+        timestamptz started_at
+        timestamptz finished_at
+    }

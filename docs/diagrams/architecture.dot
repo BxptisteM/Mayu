@@ -1,0 +1,13 @@
+digraph Mayu { graph [rankdir=LR,bgcolor="white",pad="0.4",nodesep="0.55",ranksep="0.9",fontname="DejaVu Sans",label="Mayu · System Architecture",labelloc=t,fontsize=23,fontcolor="#24263A"]; node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=12,margin="0.22,0.14",color="#C7CCE8",fillcolor="#F4F5FD",fontcolor="#24263A"]; edge [color="#7F85B0",arrowsize=0.7,penwidth=1.4];
+  discord [label="Discord
+Guild commands · buttons",fillcolor="#E6E9FF"]; rss [label="RSS feeds"]; github [label="GitHub API"]; podcasts [label="Podcast feeds"]; scheduler [label="node-cron
+Paris timezone",fillcolor="#E5E9FF"]; cmd [label="Discord command handlers"]; jobs [label="Scheduled jobs
+News · Discovery · Cleanup"]; collect [label="RSS collector
+Classify · Filter"]; discovery [label="Discovery providers
+GitHub · Podcasts"]; editorial [label="Editorial selector
+Relevance · Similarity · Diversity"]; publish [label="Publication services
+Intents · Markers · Recovery",fillcolor="#E2F1EB"]; ai [label="AI completion & budget
+Summary · Reservation",fillcolor="#F2EAFD"]; router [label="OpenRouter API"]; db [shape=cylinder,label="PostgreSQL 17
+Drizzle ORM",fillcolor="#DDEFFB"]; briefing [label="Personal Markdown briefing"];
+ rss->collect; github->discovery; podcasts->discovery; scheduler->jobs; discord->cmd; cmd->jobs; cmd->briefing; jobs->collect; jobs->discovery; collect->editorial; editorial->publish; discovery->publish; publish->ai; ai->router; ai->db; collect->db; editorial->db; discovery->db; publish->db; jobs->db; briefing->ai; briefing->db; publish->discord; briefing->discord;
+}
