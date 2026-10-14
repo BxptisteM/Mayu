@@ -11,3 +11,4 @@ export * from './github-snapshots.js';
 export * from './podcast-episodes.js';
 export * from './discovery-publications.js';
 export * from './ai-reservations.js';
+export * from './publication-intents.js';

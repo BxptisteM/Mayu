@@ -9,6 +9,7 @@ import { parseArticleSelectionId } from './components/article-selection.js';
 import { handleNewsCommand } from './commands/news.js';
 import { handleSummarizeCommand } from './commands/summarize.js';
 import { handleDiscoveryCommand } from './commands/discovery.js';
+import { handleBudgetCommand } from './commands/budget.js';
 
 async function handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   if (interaction.guildId !== env.DISCORD_GUILD_ID) {
@@ -36,6 +37,11 @@ async function handleCommand(interaction: ChatInputCommandInteraction): Promise<
 
   if (interaction.commandName === 'summarize') {
     await handleSummarizeCommand(interaction);
+    return;
+  }
+
+  if (interaction.commandName === 'budget') {
+    await handleBudgetCommand(interaction);
     return;
   }
 

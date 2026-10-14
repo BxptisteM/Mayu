@@ -26,7 +26,6 @@ const envSchema = z.object({
   OPENROUTER_MAX_CONCURRENT_REQUESTS: z.coerce.number().int().min(1).max(10).default(2),
   OPENROUTER_ALLOW_PAID_MODELS: z.stringbool().default(false),
 
-  
   DISCORD_CHANNEL_CYBER: discordIdSchema,
   DISCORD_CHANNEL_IA: discordIdSchema,
   DISCORD_CHANNEL_OS: discordIdSchema,

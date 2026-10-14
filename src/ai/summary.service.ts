@@ -88,7 +88,6 @@ export async function generateArticleSummary(
     1024,
   );
 
-
   const summary = validateGeneratedSummary(content, language);
 
   await db

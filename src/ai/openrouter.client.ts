@@ -44,7 +44,6 @@ export async function createCompletion(
   messages: CompletionMessage[],
   maxTokens = env.OPENROUTER_MAX_OUTPUT_TOKENS,
 ): Promise<CompletionResult> {
-
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     signal: AbortSignal.timeout(env.OPENROUTER_TIMEOUT_MS),

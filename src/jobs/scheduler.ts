@@ -22,19 +22,12 @@ const NEWS_CATEGORIES: NewsCategory[] = [
 
 const tasks: ScheduledTask[] = [];
 
-function schedule(
-  expression: string,
-  name: string,
-  operation: () => Promise<void>,
-): void {
+function schedule(expression: string, name: string, operation: () => Promise<void>): void {
   const task = cron.schedule(
     expression,
     () => {
       void operation().catch((error: unknown) => {
-        logger.error(
-          { err: error, job: name },
-          'Unhandled scheduled task error',
-        );
+        logger.error({ err: error, job: name }, 'Unhandled scheduled task error');
       });
     },
     {
@@ -61,82 +54,56 @@ export function startScheduler(): void {
   }
 
   // All news jobs share the same schedule.
-  schedule(
-    env.NEWS_CRON_SCHEDULE,
-    'news:all',
-    async () => {
-      const results = await Promise.allSettled([
-        ...NEWS_CATEGORIES.map((category) =>
-          executeScheduledJob(
-            `news:${category}`,
-            async () => {
-              const result = await runNewsJob(
-                category,
-                env.DISCORD_GUILD_ID,
-                'daily',
-              );
-
-              return {
-                fetched: 0,
-                published: result.published,
-                failed: result.failed,
-              };
-            },
-          ),
-        ),
-        ...(['GITHUB', 'PODCASTS'] as const).map(
-          (category) =>
-            executeScheduledJob(
-              `discovery:${category}`,
-              async () => {
-                const result = await runDiscoveryJob(
-                  category,
-                  env.DISCORD_GUILD_ID,
-                );
-
-                return {
-                  fetched: result.fetched,
-                  published: result.published,
-                  failed: result.failed,
-                };
-              },
-            ),
-        ),
-      ]);
-
-      const rejected = results.filter(
-        (result) => result.status === 'rejected',
-      );
-
-      if (rejected.length > 0) {
-        logger.error(
-          {
-            rejected: rejected.length,
-            total: results.length,
-          },
-          'Some scheduled jobs could not be started',
-        );
-      }
-    },
-  );
-
-  // Monthly database cleanup.
-  schedule(
-    env.CLEANUP_CRON_SCHEDULE,
-    'database:cleanup',
-    () =>
-      executeScheduledJob(
-        'database:cleanup',
-        async () => {
-          await runDatabaseCleanup();
+  schedule(env.NEWS_CRON_SCHEDULE, 'news:all', async () => {
+    const results = await Promise.allSettled([
+      ...NEWS_CATEGORIES.map((category) =>
+        executeScheduledJob(`news:${category}`, async () => {
+          const result = await runNewsJob(category, env.DISCORD_GUILD_ID, 'daily');
 
           return {
             fetched: 0,
-            published: 0,
-            failed: 0,
+            published: result.published,
+            failed: result.failed,
           };
-        },
+        }),
       ),
+      ...(['GITHUB', 'PODCASTS'] as const).map((category) =>
+        executeScheduledJob(`discovery:${category}`, async () => {
+          const result = await runDiscoveryJob(category, env.DISCORD_GUILD_ID);
+
+          return {
+            fetched: result.fetched,
+            published: result.published,
+            failed: result.failed,
+          };
+        }),
+      ),
+    ]);
+
+    const rejected = results.filter((result) => result.status === 'rejected');
+
+    if (rejected.length > 0) {
+      logger.error(
+        {
+          rejected: rejected.length,
+          total: results.length,
+        },
+        'Some scheduled jobs could not be started',
+      );
+    }
+  });
+
+  // Monthly database cleanup.
+  schedule(env.CLEANUP_CRON_SCHEDULE, 'database:cleanup', () =>
+    executeScheduledJob('database:cleanup', async () => {
+      await runDatabaseCleanup();
+
+      return {
+        fetched: 0,
+        published: 0,
+        failed: 0,
+      };
+    }),
   );
 
   logger.info(

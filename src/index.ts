@@ -6,6 +6,7 @@ import { logger } from './shared/logger.js';
 import { connectDatabase } from './database/client.js';
 import { synchronizeSources } from './sources/source-sync.js';
 import { startScheduler, stopScheduler } from './jobs/scheduler.js';
+import { recoverPublications } from './services/publication-recovery.service.js';
 
 async function bootstrap(): Promise<void> {
   logger.info('Starting Mayu');
@@ -21,6 +22,8 @@ async function bootstrap(): Promise<void> {
   await connectDiscord();
   logger.info('Discord connected');
   logger.info('Mayu started successfully');
+
+  await recoverPublications();
 
   startScheduler();
   logger.info('Scheduler started');

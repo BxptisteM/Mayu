@@ -1,4 +1,3 @@
-
 import { generateAiCompletion } from './completion.service.js';
 import type { Language } from '../services/guild-settings.service.js';
 

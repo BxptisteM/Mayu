@@ -9,10 +9,11 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core';
 
-export const aiReservationStatusEnum = pgEnum(
-  'ai_reservation_status',
-  ['reserved', 'completed', 'uncertain'],
-);
+export const aiReservationStatusEnum = pgEnum('ai_reservation_status', [
+  'reserved',
+  'completed',
+  'uncertain',
+]);
 
 export const aiReservations = pgTable(
   'ai_reservations',
@@ -22,9 +23,7 @@ export const aiReservations = pgTable(
     model: text('model').notNull(),
     operation: text('operation').notNull(),
 
-    status: aiReservationStatusEnum('status')
-      .notNull()
-      .default('reserved'),
+    status: aiReservationStatusEnum('status').notNull().default('reserved'),
 
     reservedUsd: numeric('reserved_usd', {
       precision: 14,

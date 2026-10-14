@@ -43,6 +43,13 @@
       "when": 1791996824109,
       "tag": "0005_elite_havok",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791999873141,
+      "tag": "0006_first_dakota_north",
+      "breakpoints": true
     }
   ]
 }

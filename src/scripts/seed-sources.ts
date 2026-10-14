@@ -1,4 +1,3 @@
-
 import 'dotenv/config';
 
 import { pool } from '../database/client.js';

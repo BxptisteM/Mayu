@@ -1,13 +1,20 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
+import { generateArticleSummary } from '../ai/summary.service.js';
 import { db } from '../database/client.js';
-import { articles, publications } from '../database/schema/index.js';
+import { articles } from '../database/schema/index.js';
 import { discordClient } from '../discord/client.js';
 import { resolveNewsChannel } from '../discord/channel-resolver.js';
 import { buildArticleMessage } from '../discord/messages/article.message.js';
-import { generateArticleSummary } from '../ai/summary.service.js';
-import { logger } from '../shared/logger.js';
 import type { RankedArticle } from '../editorial/types.js';
+import { logger } from '../shared/logger.js';
+
+import {
+  claimPublication,
+  finalizePublication,
+  markPublicationUncertain,
+  startPublication,
+} from './publication-intent.service.js';
 
 type Language = 'fr' | 'en';
 
@@ -32,7 +39,6 @@ export async function publishArticle(
     throw new Error('Publication channel belongs to another guild');
   }
 
-  // Avoid generating a summary if the article is already published.
   const [stored] = await db
     .select({
       isPublished: articles.isPublished,
@@ -43,96 +49,49 @@ export async function publishArticle(
     .where(eq(articles.id, article.id))
     .limit(1);
 
-  if (!stored) {
-    throw new Error('Article not found');
+  if (!stored || stored.isPublished) {
+    throw new Error('Article already published or unavailable');
   }
 
-  if (stored.isPublished) {
-    throw new Error('Article already published');
-  }
-
+  // Generate before claiming: an AI failure cannot leave
+  // an unused publication intent behind.
   const summary =
     stored.summary && stored.summaryLanguage === language
       ? stored.summary
       : await generateArticleSummary(article, language);
 
-  // Discord cannot participate in a PostgreSQL transaction.
-  // This first implementation serializes competing publishers and
-  // compensates for database failures by deleting the sent message.
-  return db.transaction(async (tx) => {
-    await tx.execute(
-      sql`SELECT pg_advisory_xact_lock(
-        hashtext(${`mayu:publication:${article.id}`})
-      )`,
-    );
+  const claim = await claimPublication({
+    kind: 'rss',
+    guildId,
+    channelId: channel.id,
+    category: article.category,
+    itemKey: article.id,
+  });
 
-    const [current] = await tx
-      .select({
-        id: articles.id,
-        isPublished: articles.isPublished,
-      })
-      .from(articles)
-      .where(eq(articles.id, article.id))
-      .limit(1);
+  if (!claim) {
+    throw new Error('Article publication already claimed');
+  }
 
-    if (!current || current.isPublished) {
-      throw new Error('Article already published or unavailable');
-    }
+  const payload = buildArticleMessage({
+    id: article.id,
+    title: article.title,
+    url: article.url,
+    summary,
+    sourceName: article.sourceName,
+    publishedAt: article.publishedAt,
+    category: article.category,
+  });
 
-    const [existingPublication] = await tx
-      .select({ id: publications.id })
-      .from(publications)
-      .where(eq(publications.articleId, article.id))
-      .limit(1);
+  try {
+    await startPublication(claim.id);
 
-    if (existingPublication) {
-      throw new Error('Article already has a Discord publication');
-    }
+    const message = await channel.send({
+      ...payload,
+      content: `-# ${claim.marker}`,
+      allowedMentions: { parse: [] },
+    });
 
-    const message = await channel.send(
-      buildArticleMessage({
-        id: article.id,
-        title: article.title,
-        url: article.url,
-        summary,
-        sourceName: article.sourceName,
-        publishedAt: article.publishedAt,
-        category: article.category,
-      }),
-    );
-
-    try {
-      await tx.insert(publications).values({
-        articleId: article.id,
-        category: article.category,
-        guildId,
-        channelId: channel.id,
-        messageId: message.id,
-      });
-
-      await tx
-        .update(articles)
-        .set({
-          isPublished: true,
-          discordPublishedAt: new Date(),
-        })
-        .where(and(eq(articles.id, article.id), eq(articles.isPublished, false)));
-    } catch (error: unknown) {
-      try {
-        await message.delete();
-      } catch (cleanupError: unknown) {
-        logger.error(
-          {
-            err: cleanupError,
-            articleId: article.id,
-            messageId: message.id,
-          },
-          'Failed to remove an unrecorded Discord message',
-        );
-      }
-
-      throw error;
-    }
+    await finalizePublication(claim.id, message.id);
 
     logger.info(
       {
@@ -140,14 +99,26 @@ export async function publishArticle(
         category: article.category,
         channelId: channel.id,
         messageId: message.id,
+        intentId: claim.id,
       },
       'Article published to Discord',
     );
 
     return {
       articleId: article.id,
-      messageId: message.id,
       channelId: channel.id,
+      messageId: message.id,
     };
-  });
+  } catch (error: unknown) {
+    try {
+      await markPublicationUncertain(claim.id, error);
+    } catch (stateError: unknown) {
+      logger.error(
+        { err: stateError, intentId: claim.id },
+        'Failed to preserve publication failure state',
+      );
+    }
+
+    throw error;
+  }
 }
