@@ -27,16 +27,16 @@ export async function publishDiscoveryItem(
   }
 
   const [existing] = await db
-  .select({ id: discoveryPublications.id })
-  .from(discoveryPublications)
-  .where(
-    and(
-      eq(discoveryPublications.guildId, guildId),
-      eq(discoveryPublications.category, category),
-      eq(discoveryPublications.itemKey, itemKey),
-    ),
-  )
-  .limit(1);
+    .select({ id: discoveryPublications.id })
+    .from(discoveryPublications)
+    .where(
+      and(
+        eq(discoveryPublications.guildId, guildId),
+        eq(discoveryPublications.category, category),
+        eq(discoveryPublications.itemKey, itemKey),
+      ),
+    )
+    .limit(1);
 
   if (existing) {
     return false;

@@ -27,8 +27,6 @@
     "editorial:preview": "tsx src/scripts/preview-selection.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ai:test": "tsx src/scripts/test-summary.ts",
-    "publish:test": "tsx src/scripts/test-publication.ts",
     "discovery:preview": "tsx src/scripts/preview-discovery.ts"
   },
   "repository": {

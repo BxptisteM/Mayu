@@ -23,12 +23,7 @@ export interface PublicationClaim {
 }
 
 export function publicationKey(identity: PublicationIdentity): string {
-  return [
-    identity.kind,
-    identity.guildId,
-    identity.category,
-    identity.itemKey,
-  ].join(':');
+  return [identity.kind, identity.guildId, identity.category, identity.itemKey].join(':');
 }
 
 export function publicationMarker(id: string): string {
@@ -69,12 +64,7 @@ export async function startPublication(intentId: string): Promise<void> {
       status: 'sending',
       updatedAt: new Date(),
     })
-    .where(
-      and(
-        eq(publicationIntents.id, intentId),
-        eq(publicationIntents.status, 'pending'),
-      ),
-    )
+    .where(and(eq(publicationIntents.id, intentId), eq(publicationIntents.status, 'pending')))
     .returning({ id: publicationIntents.id });
 
   if (!updated) {
@@ -82,12 +72,8 @@ export async function startPublication(intentId: string): Promise<void> {
   }
 }
 
-export async function markPublicationUncertain(
-  intentId: string,
-  error: unknown,
-): Promise<void> {
-  const message =
-    error instanceof Error ? error.message : 'Unknown publication error';
+export async function markPublicationUncertain(intentId: string, error: unknown): Promise<void> {
+  const message = error instanceof Error ? error.message : 'Unknown publication error';
 
   await db
     .update(publicationIntents)
@@ -104,10 +90,7 @@ export async function markPublicationUncertain(
     );
 }
 
-export async function finalizePublication(
-  intentId: string,
-  messageId: string,
-): Promise<void> {
+export async function finalizePublication(intentId: string, messageId: string): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.execute(sql`
       SELECT pg_advisory_xact_lock(

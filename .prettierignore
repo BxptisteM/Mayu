@@ -5,3 +5,7 @@ package-lock.json
 .env
 .env.*
 !.env.example
+dist/
+node_modules/
+coverage/
+drizzle/meta/

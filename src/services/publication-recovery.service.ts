@@ -6,10 +6,7 @@ import { publicationIntents } from '../database/schema/index.js';
 import { discordClient } from '../discord/client.js';
 import { logger } from '../shared/logger.js';
 
-import {
-  finalizePublication,
-  publicationMarker,
-} from './publication-intent.service.js';
+import { finalizePublication, publicationMarker } from './publication-intent.service.js';
 
 export interface RecoveryResult {
   recovered: number;
@@ -27,13 +24,7 @@ export async function recoverPublications(): Promise<RecoveryResult> {
   const intents = await db
     .select()
     .from(publicationIntents)
-    .where(
-      inArray(publicationIntents.status, [
-        'pending',
-        'sending',
-        'uncertain',
-      ]),
-    );
+    .where(inArray(publicationIntents.status, ['pending', 'sending', 'uncertain']));
 
   for (const intent of intents) {
     // No Discord send was started.
@@ -63,8 +54,7 @@ export async function recoverPublications(): Promise<RecoveryResult> {
 
       const found = messages.find(
         (message) =>
-          message.author.id === discordClient.user?.id &&
-          message.content.includes(marker),
+          message.author.id === discordClient.user?.id && message.content.includes(marker),
       );
 
       if (!found) {
@@ -88,10 +78,7 @@ export async function recoverPublications(): Promise<RecoveryResult> {
     } catch (error: unknown) {
       result.uncertain++;
 
-      logger.error(
-        { err: error, intentId: intent.id },
-        'Publication recovery failed',
-      );
+      logger.error({ err: error, intentId: intent.id }, 'Publication recovery failed');
     }
   }
 
