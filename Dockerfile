@@ -18,6 +18,13 @@ FROM development AS build
 RUN npm run build
 
 
+FROM development AS migrations
+
+ENV NODE_ENV=production
+
+CMD ["npm", "run", "db:migrate"]
+
+
 FROM base AS production
 
 ENV NODE_ENV=production
@@ -25,6 +32,7 @@ ENV NODE_ENV=production
 RUN npm ci --omit=dev && npm cache clean --force
 
 COPY sources.json ./sources.json
+COPY podcasts.json ./podcasts.json
 COPY --from=build /app/dist ./dist
 
 USER node

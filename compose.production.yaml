@@ -1,0 +1,85 @@
+name: mayu
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME:?DB_NAME is required}
+      POSTGRES_USER: ${DB_USER:?DB_USER is required}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    ports:
+      - "127.0.0.1:15432:5432"
+
+    networks:
+      - mayu_internal
+
+  migrate:
+    image: ghcr.io/bxptistem/mayu:${MAYU_TAG:?MAYU_TAG is required}-migrations
+    profiles:
+      - maintenance
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    restart: "no"
+
+    networks:
+      - mayu_internal
+
+  app:
+    image: ghcr.io/bxptistem/mayu:${MAYU_TAG:?MAYU_TAG is required}
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    init: true
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    read_only: true
+
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=16m
+
+    networks:
+      - mayu_internal
+
+networks:
+  mayu_internal:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: mayu_postgres_data
