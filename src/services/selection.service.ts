@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, sql, inArray } from 'drizzle-orm';
 
 import { db } from '../database/client.js';
 import { articles, selections, publications } from '../database/schema/index.js';
@@ -103,4 +103,24 @@ export async function getUserSelections(
     .innerJoin(articles, eq(selections.articleId, articles.id))
     .where(and(eq(selections.guildId, guildId), eq(selections.userId, userId)))
     .orderBy(selections.selectedAt);
+}
+
+export async function clearUserSelections(
+  guildId: string,
+  userId: string,
+  articleIds: string[],
+): Promise<void> {
+  if (articleIds.length === 0) {
+    return;
+  }
+
+  await db
+    .delete(selections)
+    .where(
+      and(
+        eq(selections.guildId, guildId),
+        eq(selections.userId, userId),
+        inArray(selections.articleId, articleIds),
+      ),
+    );
 }

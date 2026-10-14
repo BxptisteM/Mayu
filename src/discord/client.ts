@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-
 import { env } from '../config/env.js';
 import { logger } from '../shared/logger.js';
+import { once } from 'node:events';
 
 export const discordClient = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -27,9 +27,26 @@ discordClient.on(Events.Error, (error) => {
 });
 
 export async function connectDiscord(): Promise<void> {
+  if (discordClient.isReady()) {
+    return;
+  }
+
   logger.info('Connecting to Discord');
 
-  await discordClient.login(env.DISCORD_BOT_TOKEN);
+  const readyPromise = once(discordClient, Events.ClientReady, {
+    signal: AbortSignal.timeout(30_000),
+  });
+
+  try {
+    await discordClient.login(env.DISCORD_BOT_TOKEN);
+    await readyPromise;
+  } catch (error: unknown) {
+    // Prevent an unhandled rejection if login fails before ClientReady.
+    await readyPromise.catch(() => undefined);
+    throw error;
+  }
+
+  logger.info('Discord client is ready');
 }
 
 export async function disconnectDiscord(): Promise<void> {

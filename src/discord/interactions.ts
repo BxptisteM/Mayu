@@ -6,6 +6,8 @@ import { commandNames } from './commands/definitions.js';
 import { handleLanguageCommand } from './commands/language.js';
 import { handleArticleSelection } from './components/article-selection.handler.js';
 import { parseArticleSelectionId } from './components/article-selection.js';
+import { handleNewsCommand } from './commands/news.js';
+import { handleSummarizeCommand } from './commands/summarize.js';
 
 async function handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   if (interaction.guildId !== env.DISCORD_GUILD_ID) {
@@ -28,6 +30,15 @@ async function handleCommand(interaction: ChatInputCommandInteraction): Promise<
 
   if (interaction.commandName === 'language') {
     await handleLanguageCommand(interaction);
+    return;
+  }
+
+  if (interaction.commandName === 'summarize') {
+    await handleSummarizeCommand(interaction);
+    return;
+  }
+
+  if (await handleNewsCommand(interaction)) {
     return;
   }
 

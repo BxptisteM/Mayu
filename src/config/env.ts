@@ -19,6 +19,7 @@ const envSchema = z.object({
   OPENROUTER_MODEL: z.string().default('openrouter/free'),
   OPENROUTER_MONTHLY_BUDGET_USD: z.coerce.number().positive().max(1).default(0.9),
   OPENROUTER_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(2048),
+  OPENROUTER_TIMEOUT_MS: z.coerce.number().int().min(5000).max(120000).default(30000),
 
   DISCORD_CHANNEL_CYBER: discordIdSchema,
   DISCORD_CHANNEL_IA: discordIdSchema,

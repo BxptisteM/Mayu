@@ -9,7 +9,6 @@ const commandDefinitions = [
   ['github', 'Run the GitHub trending job'],
   ['summarize', 'Generate a Markdown article from selected news'],
   ['budget', 'Show the OpenRouter budget'],
-  ['podcast', 'Latest relevant podcasts episodes'],
   ['devices', 'Run the connected devices and consumer technology news job'],
   ['business', 'Run the technology business news job'],
 ] as const;
@@ -52,7 +51,6 @@ export const commands = [
           { name: 'GitHub', value: 'GITHUB' },
           { name: 'Connected Devices', value: 'DEVICES' },
           { name: 'Technology Business', value: 'BUSINESS' },
-          { name: 'Podcasts', value: 'PODCASTS' },
         ),
     ),
 
