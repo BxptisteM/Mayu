@@ -22,7 +22,7 @@ services:
       retries: 10
 
     ports:
-      - "127.0.0.1:15432:5432"
+      - '127.0.0.1:15432:5432'
 
     networks:
       - mayu_internal
@@ -42,7 +42,7 @@ services:
       postgres:
         condition: service_healthy
 
-    restart: "no"
+    restart: 'no'
 
     networks:
       - mayu_internal

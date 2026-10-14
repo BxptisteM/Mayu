@@ -41,17 +41,17 @@ Keeping up with technology means tracking dozens of sources, repositories, relea
 
 ## Features
 
-| Capability | What it does |
-| --- | --- |
-| **Curated news** | Collects articles from configured RSS sources, filters candidates, and publishes selected news to dedicated topic channels. |
-| **AI-assisted reading** | Generates article summaries using OpenRouter, subject to a configurable monthly budget. |
-| **Nine content streams** | Organizes cybersecurity, AI, operating systems, hardware, devices, technology business, general tech news, GitHub discoveries, and podcasts. |
-| **Personal reading list** | Lets members select published articles for a later recap. |
-| **Markdown briefings** | Turns selected articles into a Markdown report and sends it privately via Discord DM. |
-| **Bilingual editorial content** | Produces news summaries and Markdown reports in **English or French**, configured per server. |
-| **Scheduled and on-demand delivery** | Publishes updates automatically or lets members trigger a category job with slash commands. |
-| **Publication history** | Tracks article selections, previous publications, and job executions in PostgreSQL to manage repeated deliveries. |
-| **Budget visibility** | Exposes OpenRouter usage and remaining budget with `/budget`. |
+| Capability                           | What it does                                                                                                                                 |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Curated news**                     | Collects articles from configured RSS sources, filters candidates, and publishes selected news to dedicated topic channels.                  |
+| **AI-assisted reading**              | Generates article summaries using OpenRouter, subject to a configurable monthly budget.                                                      |
+| **Nine content streams**             | Organizes cybersecurity, AI, operating systems, hardware, devices, technology business, general tech news, GitHub discoveries, and podcasts. |
+| **Personal reading list**            | Lets members select published articles for a later recap.                                                                                    |
+| **Markdown briefings**               | Turns selected articles into a Markdown report and sends it privately via Discord DM.                                                        |
+| **Bilingual editorial content**      | Produces news summaries and Markdown reports in **English or French**, configured per server.                                                |
+| **Scheduled and on-demand delivery** | Publishes updates automatically or lets members trigger a category job with slash commands.                                                  |
+| **Publication history**              | Tracks article selections, previous publications, and job executions in PostgreSQL to manage repeated deliveries.                            |
+| **Budget visibility**                | Exposes OpenRouter usage and remaining budget with `/budget`.                                                                                |
 
 ### How it works
 
@@ -71,23 +71,23 @@ Podcasts ───────┘                               │
                PostgreSQL stores sources, articles, selections and job history.
 ```
 
-*AI summaries and Markdown briefings apply to news articles; GitHub repositories and podcast episodes use dedicated discovery posts.*
+_AI summaries and Markdown briefings apply to news articles; GitHub repositories and podcast episodes use dedicated discovery posts._
 
 ## Topics
 
 Nine dedicated streams keep different interests separate:
 
-| Topic | Command | Coverage |
-| --- | --- | --- |
-| **Cybersecurity** | `/cyber` | Security research, vulnerabilities, threats, and defensive practices. |
-| **Artificial intelligence** | `/ia` | AI models, tools, research, and industry developments. |
-| **Operating systems** | `/os` | Operating systems, platforms, and related software ecosystems. |
-| **Hardware** | `/hardware` | Components, computing hardware, and emerging technologies. |
-| **Connected devices** | `/devices` | Consumer tech, connected products, and smart devices. |
-| **Technology business** | `/business` | Tech companies, strategy, and market developments. |
-| **General tech news** | `/news` | Relevant technology updates across the wider industry. |
-| **GitHub discoveries** | `/github` | Noteworthy and trending open-source repositories. |
-| **Podcasts** | `/podcasts` | Recent episodes from configured technology podcasts. |
+| Topic                       | Command     | Coverage                                                              |
+| --------------------------- | ----------- | --------------------------------------------------------------------- |
+| **Cybersecurity**           | `/cyber`    | Security research, vulnerabilities, threats, and defensive practices. |
+| **Artificial intelligence** | `/ia`       | AI models, tools, research, and industry developments.                |
+| **Operating systems**       | `/os`       | Operating systems, platforms, and related software ecosystems.        |
+| **Hardware**                | `/hardware` | Components, computing hardware, and emerging technologies.            |
+| **Connected devices**       | `/devices`  | Consumer tech, connected products, and smart devices.                 |
+| **Technology business**     | `/business` | Tech companies, strategy, and market developments.                    |
+| **General tech news**       | `/news`     | Relevant technology updates across the wider industry.                |
+| **GitHub discoveries**      | `/github`   | Noteworthy and trending open-source repositories.                     |
+| **Podcasts**                | `/podcasts` | Recent episodes from configured technology podcasts.                  |
 
 News feeds are defined in [`sources.json`](sources.json); podcasts are configured in [`podcasts.json`](podcasts.json).
 
@@ -95,21 +95,21 @@ News feeds are defined in [`sources.json`](sources.json); podcasts are configure
 
 All server members can use the content commands in the **configured Discord server**. Changing the server's content language requires the **Manage Server** permission.
 
-| Command | Description |
-| --- | --- |
-| `/cyber` | Run the cybersecurity news job. |
-| `/ia` | Run the AI news job. |
-| `/os` | Run the operating systems news job. |
-| `/hardware` | Run the hardware news job. |
-| `/devices` | Run the connected devices news job. |
-| `/business` | Run the technology business news job. |
-| `/news` | Run the general technology news job. |
-| `/github` | Find and publish GitHub repository discoveries. |
-| `/podcasts` | Find and publish recent technology podcast episodes. |
-| `/more category:<topic>` | Publish additional, previously unpublished RSS news for the chosen topic (three by default). GitHub and podcasts are not supported by this command. |
-| `/summarize` | Generate a Markdown briefing from your selected articles and deliver it via DM. |
-| `/language value:<French\|English>` | Change the language of generated news and Markdown content for the server. **Manage Server** required. |
-| `/budget` | Show the OpenRouter model, monthly spending limit, usage, reservations, and remaining allowance. |
+| Command                             | Description                                                                                                                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/cyber`                            | Run the cybersecurity news job.                                                                                                                     |
+| `/ia`                               | Run the AI news job.                                                                                                                                |
+| `/os`                               | Run the operating systems news job.                                                                                                                 |
+| `/hardware`                         | Run the hardware news job.                                                                                                                          |
+| `/devices`                          | Run the connected devices news job.                                                                                                                 |
+| `/business`                         | Run the technology business news job.                                                                                                               |
+| `/news`                             | Run the general technology news job.                                                                                                                |
+| `/github`                           | Find and publish GitHub repository discoveries.                                                                                                     |
+| `/podcasts`                         | Find and publish recent technology podcast episodes.                                                                                                |
+| `/more category:<topic>`            | Publish additional, previously unpublished RSS news for the chosen topic (three by default). GitHub and podcasts are not supported by this command. |
+| `/summarize`                        | Generate a Markdown briefing from your selected articles and deliver it via DM.                                                                     |
+| `/language value:<French\|English>` | Change the language of generated news and Markdown content for the server. **Manage Server** required.                                              |
+| `/budget`                           | Show the OpenRouter model, monthly spending limit, usage, reservations, and remaining allowance.                                                    |
 
 **Build your own briefing:** select interesting articles using the buttons on published news posts, then run `/summarize`. Mayu sends the `.md` file to your Discord DMs; your selection is cleared after successful delivery. Make sure your privacy settings allow DMs from the bot.
 
@@ -121,12 +121,12 @@ All server members can use the content commands in the **configured Discord serv
 
 Mayu runs its scheduler in the **Europe/Paris** timezone. The defaults below can be changed through environment variables.
 
-| Job | Default schedule | Responsibility |
-| --- | --- | --- |
-| **Daily news** | Every day at **08:00** | Run collection, selection, and publication for the seven RSS news categories. |
-| **GitHub discovery** | Every day at **08:00** | Discover and publish selected repositories. |
-| **Podcast discovery** | Every day at **08:00** | Discover and publish selected podcast episodes. |
-| **Database cleanup** | **03:00 on the 1st of each month** | Remove eligible stale article records, old podcast episodes and GitHub snapshots, and older completed job logs. |
+| Job                   | Default schedule                   | Responsibility                                                                                                  |
+| --------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Daily news**        | Every day at **08:00**             | Run collection, selection, and publication for the seven RSS news categories.                                   |
+| **GitHub discovery**  | Every day at **08:00**             | Discover and publish selected repositories.                                                                     |
+| **Podcast discovery** | Every day at **08:00**             | Discover and publish selected podcast episodes.                                                                 |
+| **Database cleanup**  | **03:00 on the 1st of each month** | Remove eligible stale article records, old podcast episodes and GitHub snapshots, and older completed job logs. |
 
 The news and discovery jobs share one daily cron trigger and are processed as separate category jobs. Concurrent runs of the same job are guarded against duplication.
 
@@ -136,17 +136,17 @@ Cleanup retains selected articles and does not indiscriminately delete configure
 
 ## Technology
 
-| Layer | Stack |
-| --- | --- |
-| Runtime | Node.js 24, TypeScript |
-| Discord | discord.js 14 |
-| Data | PostgreSQL 17, Drizzle ORM |
-| Content ingestion | RSS feeds, GitHub discovery, podcast feeds |
-| AI generation | OpenRouter |
-| Scheduling | node-cron |
-| Validation and logging | Zod, Pino |
-| Quality | Vitest, ESLint, Prettier |
-| Local infrastructure | Docker, Docker Compose |
+| Layer                  | Stack                                      |
+| ---------------------- | ------------------------------------------ |
+| Runtime                | Node.js 24, TypeScript                     |
+| Discord                | discord.js 14                              |
+| Data                   | PostgreSQL 17, Drizzle ORM                 |
+| Content ingestion      | RSS feeds, GitHub discovery, podcast feeds |
+| AI generation          | OpenRouter                                 |
+| Scheduling             | node-cron                                  |
+| Validation and logging | Zod, Pino                                  |
+| Quality                | Vitest, ESLint, Prettier                   |
+| Local infrastructure   | Docker, Docker Compose                     |
 
 ## Getting started
 
@@ -218,16 +218,16 @@ Run `npm ci` first when developing outside Docker. The checked-in `package-lock.
 
 The main tuning knobs are defined and validated in [`src/config/env.ts`](src/config/env.ts):
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `TZ` | `Europe/Paris` | Process timezone (the scheduler explicitly uses Europe/Paris). |
-| `NEWS_CRON_SCHEDULE` | `0 8 * * *` | Daily news and discovery trigger. |
-| `CLEANUP_CRON_SCHEDULE` | `0 3 1 * *` | Monthly cleanup trigger. |
-| `ARTICLES_LOOKBACK_HOURS` | `24` | News collection lookback window. |
-| `ARTICLES_DAILY_PUBLISH_LIMIT` | `5` | Daily publication cap per category. |
-| `ARTICLES_MORE_PUBLISH_LIMIT` | `3` | Additional RSS news requested by `/more`. |
-| `OPENROUTER_MODEL` | `openrouter/free` | Default AI model selection. |
-| `OPENROUTER_MONTHLY_BUDGET_USD` | `0.9` | Monthly AI spend ceiling in USD. |
+| Variable                        | Default           | Purpose                                                        |
+| ------------------------------- | ----------------- | -------------------------------------------------------------- |
+| `TZ`                            | `Europe/Paris`    | Process timezone (the scheduler explicitly uses Europe/Paris). |
+| `NEWS_CRON_SCHEDULE`            | `0 8 * * *`       | Daily news and discovery trigger.                              |
+| `CLEANUP_CRON_SCHEDULE`         | `0 3 1 * *`       | Monthly cleanup trigger.                                       |
+| `ARTICLES_LOOKBACK_HOURS`       | `24`              | News collection lookback window.                               |
+| `ARTICLES_DAILY_PUBLISH_LIMIT`  | `5`               | Daily publication cap per category.                            |
+| `ARTICLES_MORE_PUBLISH_LIMIT`   | `3`               | Additional RSS news requested by `/more`.                      |
+| `OPENROUTER_MODEL`              | `openrouter/free` | Default AI model selection.                                    |
+| `OPENROUTER_MONTHLY_BUDGET_USD` | `0.9`             | Monthly AI spend ceiling in USD.                               |
 
 For the full set of required variables and their validation rules, see [`.env.example`](.env.example) and [`src/config/env.ts`](src/config/env.ts).
 
@@ -265,7 +265,7 @@ For self-hosting, provision a Discord bot, a PostgreSQL database, and the requir
 
 **Mayu - Know what matters. Ignore the noise.**
 
-*Your daily dose of technology, without the daily hunt.*
+_Your daily dose of technology, without the daily hunt._
 
 **BxptisteM**
 
