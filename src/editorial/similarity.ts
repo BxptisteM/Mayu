@@ -65,7 +65,31 @@ const GENERIC_TERMS = new Set([
   'data',
   'artificial',
   'intelligence',
+  'zero',
+  'day',
+  'exploited',
+  'critical',
+  'patched',
+  'patch',
+  'patches',
+  'exploit',
+  'exploits',
+  'remote',
+  'code',
+  'execution',
+  'access',
+  'devices',
+  'servers',
+  'researchers',
+  'discovered',
+  'discloses',
+  'disclosed',
 ]);
+
+const SECURITY_EVENT_PATTERN =
+  /\b(?:zero[- ]day|vulnerabilit(?:y|ies)|security flaw|exploit(?:ed|s|ing)?|attack(?:s|ers)?|breach|CVE-\d{4}-\d{4,})\b/i;
+
+const CVE_PATTERN = /\bCVE-\d{4}-\d{4,}\b/gi;
 
 export function tokenizeTitle(title: string): Set<string> {
   const normalized = title
@@ -94,9 +118,84 @@ export function titleSimilarity(first: string, second: string): number {
   return common.length / unionSize;
 }
 
-export function isSameEvent(first: string, second: string): boolean {
+function extractCves(title: string): Set<string> {
+  return new Set([...title.matchAll(CVE_PATTERN)].map((match) => match[0].toUpperCase()));
+}
+
+function hasConflictingCves(first: string, second: string): boolean {
+  const a = extractCves(first);
+  const b = extractCves(second);
+
+  if (a.size === 0 || b.size === 0) {
+    return false;
+  }
+
+  return ![...a].some((cve) => b.has(cve));
+}
+
+function isSameSecurityIncident(first: string, second: string): boolean {
+  if (!SECURITY_EVENT_PATTERN.test(first) || !SECURITY_EVENT_PATTERN.test(second)) {
+    return false;
+  }
+
   const a = tokenizeTitle(first);
   const b = tokenizeTitle(second);
+
+  const sharedIdentifiers = [...a].filter(
+    (word) => b.has(word) && !GENERIC_TERMS.has(word) && !/^\d+$/.test(word),
+  );
+
+  // The shared identifier is typically a vendor, product,
+  // campaign or malware family name.
+  if (sharedIdentifiers.length === 0) {
+    return false;
+  }
+
+  const firstZeroDay = /\bzero[- ]day\b/i.test(first);
+  const secondZeroDay = /\bzero[- ]day\b/i.test(second);
+
+  if (firstZeroDay && secondZeroDay) {
+    return true;
+  }
+
+  // Require more evidence when only one title says "zero-day".
+  return sharedIdentifiers.length >= 2;
+}
+
+function hasConflictingSecuritySubjects(first: string, second: string): boolean {
+  if (!SECURITY_EVENT_PATTERN.test(first) || !SECURITY_EVENT_PATTERN.test(second)) {
+    return false;
+  }
+
+  const a = tokenizeTitle(first);
+  const b = tokenizeTitle(second);
+
+  const distinctiveA = [...a].filter((word) => !GENERIC_TERMS.has(word) && !/^\d+$/.test(word));
+
+  const distinctiveB = [...b].filter((word) => !GENERIC_TERMS.has(word) && !/^\d+$/.test(word));
+
+  if (distinctiveA.length === 0 || distinctiveB.length === 0) {
+    return false;
+  }
+
+  return !distinctiveA.some((word) => distinctiveB.includes(word));
+}
+
+export function isSameEvent(first: string, second: string): boolean {
+  if (hasConflictingCves(first, second)) {
+    return false;
+  }
+
+  if (hasConflictingSecuritySubjects(first, second)) {
+    return false;
+  }
+
+  const a = tokenizeTitle(first);
+  const b = tokenizeTitle(second);
+
+  if (a.size === 0 || b.size === 0) {
+    return false;
+  }
 
   const common = [...a].filter((word) => b.has(word));
 
@@ -108,7 +207,13 @@ export function isSameEvent(first: string, second: string): boolean {
 
   const overlap = common.length / Math.min(a.size, b.size);
 
-  return (
-    titleSimilarity(first, second) >= 0.6 || (distinctiveMatches.length >= 2 && overlap >= 0.6)
-  );
+  if (titleSimilarity(first, second) >= 0.6) {
+    return true;
+  }
+
+  if (distinctiveMatches.length >= 2 && overlap >= 0.6) {
+    return true;
+  }
+
+  return isSameSecurityIncident(first, second);
 }

@@ -6,3 +6,7 @@ export * from './selections.js';
 export * from './job-runs.js';
 export * from './ai-usages.js';
 export * from './article-categories.js';
+export * from './github-repositories.js';
+export * from './github-snapshots.js';
+export * from './podcast-episodes.js';
+export * from './discovery-publications.js';

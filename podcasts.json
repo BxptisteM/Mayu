@@ -1,0 +1,32 @@
+[
+  {
+    "name": "The Changelog",
+    "url": "https://changelog.com/podcast/feed",
+    "enabled": true
+  },
+  {
+    "name": "Syntax",
+    "url": "https://feed.syntax.fm/rss",
+    "enabled": true
+  },
+  {
+    "name": "Darknet Diaries",
+    "url": "https://podcast.darknetdiaries.com/",
+    "enabled": true
+  },
+  {
+    "name": "Latent Space",
+    "url": "https://www.latent.space/feed",
+    "enabled": true
+  },
+  {
+    "name": "Linux Unplugged",
+    "url": "https://www.jupiterbroadcasting.com/show/linux-unplugged/rss",
+    "enabled": true
+  },
+  {
+    "name": "The Practical AI Podcast",
+    "url": "https://changelog.com/practicalai/feed",
+    "enabled": true
+  }
+]

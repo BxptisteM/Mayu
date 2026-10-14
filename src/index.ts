@@ -5,6 +5,7 @@ import { registerInteractionHandlers } from './discord/interactions.js';
 import { logger } from './shared/logger.js';
 import { connectDatabase } from './database/client.js';
 import { synchronizeSources } from './sources/source-sync.js';
+import { startScheduler, stopScheduler } from './jobs/scheduler.js';
 
 async function bootstrap(): Promise<void> {
   logger.info('Starting Mayu');
@@ -19,15 +20,20 @@ async function bootstrap(): Promise<void> {
 
   await connectDiscord();
   logger.info('Discord connected');
-
   logger.info('Mayu started successfully');
+
+  startScheduler();
+  logger.info('Scheduler started');
 }
 
 async function shutdown(signal: string): Promise<void> {
   logger.info({ signal }, 'Shutting down Mayu');
 
-  await disconnectDiscord();
+  stopScheduler();
+  logger.info('Scheduler stopped');
 
+  await disconnectDiscord();
+  logger.info('Discord disconnected');
   logger.info('Mayu stopped');
 }
 
@@ -42,6 +48,7 @@ process.once('SIGTERM', () => {
 bootstrap().catch(async (error: unknown) => {
   logger.fatal({ err: error }, 'Failed to start Mayu');
 
+  stopScheduler();
   await disconnectDiscord();
 
   process.exitCode = 1;

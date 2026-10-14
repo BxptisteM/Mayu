@@ -39,6 +39,9 @@ const envSchema = z.object({
 
   SOURCES_FETCH_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
   SOURCES_MAX_CONCURRENCY: z.coerce.number().int().min(1).max(8).default(4),
+
+  NEWS_CRON_SCHEDULE: z.string().trim().min(1).default('0 8 * * *'),
+  CLEANUP_CRON_SCHEDULE: z.string().trim().min(1).default('0 3 1 * *'),
 });
 
 const result = envSchema.safeParse(process.env);

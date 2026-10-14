@@ -28,7 +28,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "ai:test": "tsx src/scripts/test-summary.ts",
-    "publish:test": "tsx src/scripts/test-publication.ts"
+    "publish:test": "tsx src/scripts/test-publication.ts",
+    "discovery:preview": "tsx src/scripts/preview-discovery.ts",
+    "cleanup:test": "tsx src/scripts/test-cleanup.ts"
   },
   "repository": {
     "type": "git",
@@ -49,6 +51,7 @@
     "discord.js": "^14.27.0",
     "dotenv": "^18.0.7",
     "drizzle-orm": "^0.45.4",
+    "node-cron": "^4.6.0",
     "pg": "^8.23.1",
     "pino": "^10.4.0",
     "rss-parser": "^3.13.0",
