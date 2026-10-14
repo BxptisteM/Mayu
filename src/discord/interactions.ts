@@ -4,6 +4,8 @@ import { logger } from '../shared/logger.js';
 import { discordClient } from './client.js';
 import { commandNames } from './commands/definitions.js';
 import { handleLanguageCommand } from './commands/language.js';
+import { handleArticleSelection } from './components/article-selection.handler.js';
+import { parseArticleSelectionId } from './components/article-selection.js';
 
 async function handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   if (interaction.guildId !== env.DISCORD_GUILD_ID) {
@@ -45,30 +47,58 @@ async function handleCommand(interaction: ChatInputCommandInteraction): Promise<
 
 export function registerInteractionHandlers(): void {
   discordClient.on(Events.InteractionCreate, (interaction) => {
-    if (!interaction.isChatInputCommand()) {
+    if (interaction.isButton()) {
+      if (!parseArticleSelectionId(interaction.customId)) {
+        return;
+      }
+
+      void handleArticleSelection(interaction).catch(async (error: unknown) => {
+        logger.error(
+          { err: error, customId: interaction.customId },
+          'Article selection interaction failed',
+        );
+
+        try {
+          const content = 'Failed to update article selection.';
+
+          if (interaction.deferred || interaction.replied) {
+            await interaction.editReply({ content });
+          } else {
+            await interaction.reply({
+              content,
+              flags: MessageFlags.Ephemeral,
+            });
+          }
+        } catch (responseError: unknown) {
+          logger.error({ err: responseError }, 'Failed to respond to selection interaction');
+        }
+      });
+
       return;
     }
 
-    void handleCommand(interaction).catch(async (error: unknown) => {
-      logger.error({ err: error, command: interaction.commandName }, 'Discord interaction failed');
+    if (interaction.isChatInputCommand()) {
+      void handleCommand(interaction).catch(async (error: unknown) => {
+        logger.error(
+          { err: error, command: interaction.commandName },
+          'Discord command interaction failed',
+        );
 
-      try {
-        const content = 'An error occurred while executing the command.';
+        try {
+          const content = 'Command execution failed.';
 
-        if (interaction.deferred || interaction.replied) {
-          await interaction.followUp({
-            content,
-            flags: MessageFlags.Ephemeral,
-          });
-        } else {
-          await interaction.reply({
-            content,
-            flags: MessageFlags.Ephemeral,
-          });
+          if (interaction.deferred || interaction.replied) {
+            await interaction.editReply({ content });
+          } else {
+            await interaction.reply({
+              content,
+              flags: MessageFlags.Ephemeral,
+            });
+          }
+        } catch (responseError: unknown) {
+          logger.error({ err: responseError }, 'Failed to respond to command interaction');
         }
-      } catch (responseError: unknown) {
-        logger.error({ err: responseError }, 'Failed to respond to Discord interaction');
-      }
-    });
+      });
+    }
   });
 }

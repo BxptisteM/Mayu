@@ -12,6 +12,7 @@ export default defineConfig(
       'coverage/**',
       'eslint.config.mjs',
       'drizzle.config.ts',
+      'tests/**',
     ],
   },
   js.configs.recommended,
@@ -22,6 +23,7 @@ export default defineConfig(
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        allowDefaultProject: ['drizzle.config.ts'],
       },
     },
     rules: {
