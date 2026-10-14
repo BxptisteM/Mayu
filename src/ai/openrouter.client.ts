@@ -40,21 +40,10 @@ export interface CompletionMessage {
   content: string;
 }
 
-function assertFreeModel(): void {
-  const model = env.OPENROUTER_MODEL;
-
-  if (model !== 'openrouter/free' && !model.endsWith(':free')) {
-    throw new Error(
-      'Paid OpenRouter models are disabled until budget reservations are implemented',
-    );
-  }
-}
-
 export async function createCompletion(
   messages: CompletionMessage[],
   maxTokens = env.OPENROUTER_MAX_OUTPUT_TOKENS,
 ): Promise<CompletionResult> {
-  assertFreeModel();
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -95,12 +84,6 @@ export async function createCompletion(
   }
 
   const content = choice.message.content?.trim() ?? '';
-
-  if (!content) {
-    throw new Error(
-      `OpenRouter returned an empty completion (model=${completion.model}, finishReason=${choice.finish_reason ?? 'unknown'}, outputTokens=${completion.usage.completion_tokens})`,
-    );
-  }
 
   return {
     content,

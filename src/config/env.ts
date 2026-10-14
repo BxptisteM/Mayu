@@ -20,7 +20,13 @@ const envSchema = z.object({
   OPENROUTER_MONTHLY_BUDGET_USD: z.coerce.number().positive().max(1).default(0.9),
   OPENROUTER_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(2048),
   OPENROUTER_TIMEOUT_MS: z.coerce.number().int().min(5000).max(120000).default(30000),
+  OPENROUTER_INPUT_USD_PER_MILLION: z.coerce.number().min(0).default(0),
+  OPENROUTER_OUTPUT_USD_PER_MILLION: z.coerce.number().min(0).default(0),
+  OPENROUTER_MAX_INPUT_TOKENS: z.coerce.number().int().positive().default(8192),
+  OPENROUTER_MAX_CONCURRENT_REQUESTS: z.coerce.number().int().min(1).max(10).default(2),
+  OPENROUTER_ALLOW_PAID_MODELS: z.stringbool().default(false),
 
+  
   DISCORD_CHANNEL_CYBER: discordIdSchema,
   DISCORD_CHANNEL_IA: discordIdSchema,
   DISCORD_CHANNEL_OS: discordIdSchema,

@@ -1,5 +1,5 @@
-import { createCompletion } from './openrouter.client.js';
-import { assertBudgetAvailable, recordAiUsage } from './budget.service.js';
+
+import { generateAiCompletion } from './completion.service.js';
 import type { Language } from '../services/guild-settings.service.js';
 
 export interface MarkdownArticle {
@@ -32,8 +32,6 @@ export async function generateMarkdownSummary(
     throw new Error('No articles selected');
   }
 
-  await assertBudgetAvailable();
-
   const sources = articles.map((article, index) => ({
     reference: index + 1,
     title: article.title,
@@ -41,7 +39,8 @@ export async function generateMarkdownSummary(
     content: getSourceText(article, language),
   }));
 
-  const result = await createCompletion(
+  const content = await generateAiCompletion(
+    'markdown_summary',
     [
       {
         role: 'system',
@@ -72,17 +71,13 @@ export async function generateMarkdownSummary(
     3072,
   );
 
-  // Record usage even when the output fails editorial validation.
-  await recordAiUsage('markdown_summary', result);
-
-  const markdown = result.content.trim();
+  const markdown = content.trim();
 
   if (markdown.length < 200 || !markdown.includes('# ') || markdown.startsWith('```')) {
     throw new Error('OpenRouter returned invalid Markdown content');
   }
 
-  // Ensure every original source remains available,
-  // even if the model forgets to include a link.
+  // Always append the original sources independently of the AI output.
   const references = articles
     .map(
       (article, index) =>
@@ -90,7 +85,5 @@ export async function generateMarkdownSummary(
     )
     .join('\n');
 
-  const heading = language === 'fr' ? 'Sources' : 'Sources';
-
-  return `${markdown}\n\n---\n\n## ${heading}\n\n${references}\n`;
+  return `${markdown}\n\n---\n\n## Sources\n\n${references}\n`;
 }

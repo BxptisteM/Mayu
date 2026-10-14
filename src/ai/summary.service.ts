@@ -4,8 +4,7 @@ import { db } from '../database/client.js';
 import { articles } from '../database/schema/index.js';
 import type { Language } from '../services/guild-settings.service.js';
 
-import { assertBudgetAvailable, recordAiUsage } from './budget.service.js';
-import { createCompletion } from './openrouter.client.js';
+import { generateAiCompletion } from './completion.service.js';
 
 export interface ArticleSummaryInput {
   id: string;
@@ -61,9 +60,8 @@ export async function generateArticleSummary(
     throw new Error('Article has no description to summarize');
   }
 
-  await assertBudgetAvailable();
-
-  const result = await createCompletion(
+  const content = await generateAiCompletion(
+    'article_summary',
     [
       {
         role: 'system',
@@ -90,9 +88,8 @@ export async function generateArticleSummary(
     1024,
   );
 
-  await recordAiUsage('article_summary', result);
 
-  const summary = validateGeneratedSummary(result.content, language);
+  const summary = validateGeneratedSummary(content, language);
 
   await db
     .update(articles)
