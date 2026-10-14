@@ -8,6 +8,8 @@ import { logger } from '../shared/logger.js';
 
 const MAX_FEED_BYTES = 32 * 1024 * 1024;
 const FETCH_TIMEOUT_MS = 30_000;
+const EPISODE_LOOKBACK_DAYS = 7;
+const MAX_EPISODES = 10;
 
 const podcastConfigSchema = z.array(
   z.object({
@@ -34,14 +36,24 @@ export interface PodcastEpisode {
 
 const parser = new Parser();
 
+function isValidEpisodeUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+
+    return (url.protocol === 'https:' || url.protocol === 'http:') && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 function cleanDescription(value: string | undefined): string {
   if (!value) {
     return '';
   }
 
   return value
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, ' ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;/gi, ' ')
     .replace(/&amp;/gi, '&')
@@ -148,23 +160,30 @@ export async function fetchPodcastEpisodes(now = new Date()): Promise<PodcastEpi
           continue;
         }
 
+        if (!isValidEpisodeUrl(link)) {
+          continue;
+        }
+
         const publishedAt = new Date(dateValue);
 
         if (Number.isNaN(publishedAt.getTime()) || publishedAt > now) {
           continue;
         }
 
-        // Retain only episodes from the last seven days.
-        if (publishedAt.getTime() < now.getTime() - 7 * 86_400_000) {
+        if (publishedAt.getTime() < now.getTime() - EPISODE_LOOKBACK_DAYS * 86_400_000) {
           continue;
         }
+
+        // Use the original HTML when available so script and style
+        // contents can be removed before HTML tags are stripped.
+        const description = cleanDescription(item.content ?? item.contentSnippet);
 
         episodes.push({
           podcastName: podcast.name,
           guid: item.guid?.trim() || link,
           title,
           url: link,
-          description: cleanDescription(item.contentSnippet ?? item.content),
+          description,
           publishedAt,
           feedUrl: podcast.url,
         });
@@ -192,5 +211,7 @@ export async function fetchPodcastEpisodes(now = new Date()): Promise<PodcastEpi
     }
   }
 
-  return episodes.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()).slice(0, 10);
+  return episodes
+    .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
+    .slice(0, MAX_EPISODES);
 }

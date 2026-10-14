@@ -17,11 +17,11 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 describe('Known podcast normalization defects', () => {
-  it.fails('rejects episode links with unsupported protocols', async () => {
+  it('rejects episode links with unsupported protocols', async () => {
     fetchMock.mockResolvedValue(new Response(feed('javascript:alert(1)', 'Episode description')));
     expect(await fetchPodcastEpisodes(now)).toEqual([]);
   });
-  it.fails('removes script contents from descriptions parsed by rss-parser', async () => {
+  it('removes script contents from descriptions parsed by rss-parser', async () => {
     fetchMock.mockResolvedValue(
       new Response(
         feed(
