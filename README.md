@@ -157,7 +157,7 @@ Cleanup retains selected articles and does not indiscriminately delete configure
 - A Discord server and channels for the configured content categories
 - An OpenRouter API key **if you want AI-generated summaries and briefings**
 
-The project also supports local development with **Node.js 24** and PostgreSQL.
+The project also supports local development with **Node.js 24 or 26** and PostgreSQL. Docker uses Node.js 24; CI validates both versions.
 
 ### 1. Clone and configure
 
@@ -213,6 +213,10 @@ npm run discovery:preview   # Preview discovery candidates
 ```
 
 Run `npm ci` first when developing outside Docker. The checked-in `package-lock.json` ensures repeatable dependency installation.
+
+The `allowScripts` policy in `package.json` approves the pinned esbuild and fsevents install scripts. If a dependency update introduces a new version, review it with `npm install-scripts ls` before approving its scripts.
+
+Drizzle Kit 0.31.x still pulls in the deprecated `@esbuild-kit/esm-loader` and `@esbuild-kit/core-utils` packages. These upstream deprecation warnings do not prevent installation; the esbuild override keeps their esbuild dependency on the patched 0.25.x line.
 
 ## Configuration
 
